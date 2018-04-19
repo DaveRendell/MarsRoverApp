@@ -2,21 +2,27 @@ package models;
 
 /**
  * Enum describing the 4 cardinal compass directions a rover can be pointing.
+ * Contains logic for rotating directions, as well as the difference in both
+ * x and y dimensions a rover should move when facing in this direction.
  */
 public enum Direction {
-    NORTH(0, "N"),
-    EAST(1, "E"),
-    SOUTH(2, "S"),
-    WEST(3, "W");
+    NORTH(0, "N", 0, 1),
+    EAST(1, "E", 1, 0),
+    SOUTH(2, "S", 0, -1),
+    WEST(3, "W", -1, 0);
 
     private static Direction[] directions = values();
 
     private int index;
     private String symbol;
+    private int movementX;
+    private int movementY;
 
-    Direction(int index, String symbol) {
+    Direction(int index, String symbol, int movementX, int movementY) {
         this.index = index;
         this.symbol = symbol;
+        this.movementX = movementX;
+        this.movementY = movementY;
     }
 
     public Direction rotateLeft() {
@@ -25,6 +31,14 @@ public enum Direction {
 
     public Direction rotateRight() {
         return getDirectionAtIndex(index + 1);
+    }
+
+    public int getMovementX() {
+        return movementX;
+    }
+
+    public int getMovementY() {
+        return movementY;
     }
 
     @Override

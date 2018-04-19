@@ -22,6 +22,11 @@ public class RoverPosition {
         direction = direction.rotateRight();
     }
 
+    public void moveAtCurrentHeading() {
+        x += direction.getMovementX();
+        y += direction.getMovementY();
+    }
+
     public int getX() {
         return x;
     }

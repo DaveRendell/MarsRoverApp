@@ -8,7 +8,7 @@ import models.RoverPosition;
 public class MoveInstruction extends Instruction {
     @Override
     public void execute(RoverPosition startPosition) {
-        // TODO - implement instruction
+        startPosition.moveAtCurrentHeading();
     }
 
     @Override
