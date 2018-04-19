@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 
 public class PlateauSizeParserTest {
-    PlateauSizeParser plateauSizeParser;
+    private PlateauSizeParser plateauSizeParser;
 
     @Before
     public void setUp() {
