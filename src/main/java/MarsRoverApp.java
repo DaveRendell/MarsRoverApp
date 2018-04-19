@@ -1,3 +1,4 @@
+import exceptions.RoverMovementException;
 import exceptions.UserInputException;
 import instructions.Instruction;
 import models.PlateauSize;
@@ -7,6 +8,7 @@ import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import parsers.InstructionListParser;
 import parsers.PlateauSizeParser;
 import parsers.RoverPositionParser;
+import processors.RoverProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +22,17 @@ public class MarsRoverApp {
         InstructionListParser instructionListParser = new InstructionListParser();
 
         PlateauSize plateauSize = readPlateauSize(scanner, plateauSizeParser);
-
         List<RoverInput> roverInputs = readRoverInputs(scanner, roverPositionParser, instructionListParser);
 
-        System.out.println(plateauSize);
-        for (RoverInput roverInput : roverInputs) {
-            System.out.println(roverInput);
-        }
+        RoverProcessor roverProcessor = new RoverProcessor(plateauSize);
+
+        roverInputs.forEach(input -> {
+            try {
+                System.out.println(roverProcessor.process(input));
+            } catch (RoverMovementException e) {
+                System.out.println(e.getMessage());
+            }
+        });
     }
 
     private static PlateauSize readPlateauSize(Scanner scanner, PlateauSizeParser plateauSizeParser) {

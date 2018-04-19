@@ -9,7 +9,7 @@ public class RightInstruction extends Instruction {
     @Override
     public RoverPosition execute(RoverPosition startPosition) {
         // TODO - implement instruction
-        return null;
+        return startPosition;
     }
 
     @Override

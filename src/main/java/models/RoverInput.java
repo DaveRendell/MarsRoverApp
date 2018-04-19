@@ -17,6 +17,14 @@ public class RoverInput {
         this.instructions = instructions;
     }
 
+    public RoverPosition getInitialPosition() {
+        return initialPosition;
+    }
+
+    public List<Instruction> getInstructions() {
+        return instructions;
+    }
+
     @Override
     public String toString() {
         String position = initialPosition.toString();
