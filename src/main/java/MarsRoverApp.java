@@ -4,38 +4,47 @@ import instructions.Instruction;
 import models.PlateauSize;
 import models.RoverInput;
 import models.RoverPosition;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import parsers.InstructionListParser;
 import parsers.PlateauSizeParser;
 import parsers.RoverPositionParser;
 import processors.RoverProcessor;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class MarsRoverApp {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        PlateauSizeParser plateauSizeParser = new PlateauSizeParser();
-        RoverPositionParser roverPositionParser = new RoverPositionParser();
-        InstructionListParser instructionListParser = new InstructionListParser();
+    private Scanner scanner;
+    private PlateauSizeParser plateauSizeParser;
+    private RoverPositionParser roverPositionParser;
+    private InstructionListParser instructionListParser;
+    private PrintStream outputStream;
 
-        PlateauSize plateauSize = readPlateauSize(scanner, plateauSizeParser);
-        List<RoverInput> roverInputs = readRoverInputs(scanner, roverPositionParser, instructionListParser);
+    public MarsRoverApp(Scanner scanner, PlateauSizeParser plateauSizeParser, RoverPositionParser roverPositionParser, InstructionListParser instructionListParser, PrintStream outputStream) {
+        this.scanner = scanner;
+        this.plateauSizeParser = plateauSizeParser;
+        this.roverPositionParser = roverPositionParser;
+        this.instructionListParser = instructionListParser;
+        this.outputStream = outputStream;
+    }
+
+    public void run() {
+        PlateauSize plateauSize = readPlateauSize();
+        List<RoverInput> roverInputs = readRoverInputs();
 
         RoverProcessor roverProcessor = new RoverProcessor(plateauSize);
 
         roverInputs.forEach(input -> {
             try {
-                System.out.println(roverProcessor.process(input));
+                outputStream.println(roverProcessor.process(input));
             } catch (RoverMovementException e) {
-                System.out.println(e.getMessage());
+                outputStream.println(e.getMessage());
             }
         });
     }
 
-    private static PlateauSize readPlateauSize(Scanner scanner, PlateauSizeParser plateauSizeParser) {
+    private PlateauSize readPlateauSize() {
         System.out.println(
                 "Please enter dimensions of the plateau, in format \"<width> <height>\", where width " +
                         "and height are positive integers");
@@ -53,10 +62,7 @@ public class MarsRoverApp {
         return plateauSize;
     }
 
-    private static List<RoverInput> readRoverInputs(
-            Scanner scanner,
-            RoverPositionParser roverPositionParser,
-            InstructionListParser instructionListParser) {
+    private List<RoverInput> readRoverInputs() {
         List<RoverInput> roverInputs = new ArrayList<>();
 
         System.out.println(
@@ -95,5 +101,17 @@ public class MarsRoverApp {
         } while (!roverPositionLine.isEmpty());
 
         return roverInputs;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        PlateauSizeParser plateauSizeParser = new PlateauSizeParser();
+        RoverPositionParser roverPositionParser = new RoverPositionParser();
+        InstructionListParser instructionListParser = new InstructionListParser();
+
+        MarsRoverApp app = new MarsRoverApp(
+                scanner, plateauSizeParser, roverPositionParser, instructionListParser, System.out);
+
+        app.run();
     }
 }
