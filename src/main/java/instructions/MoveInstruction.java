@@ -7,9 +7,8 @@ import models.RoverPosition;
  */
 public class MoveInstruction extends Instruction {
     @Override
-    public RoverPosition execute(RoverPosition startPosition) {
+    public void execute(RoverPosition startPosition) {
         // TODO - implement instruction
-        return startPosition;
     }
 
     @Override

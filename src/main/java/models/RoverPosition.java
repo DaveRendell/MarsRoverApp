@@ -14,6 +14,14 @@ public class RoverPosition {
         this.direction = direction;
     }
 
+    public void rotateLeft() {
+        direction = direction.rotateLeft();
+    }
+
+    public void rotateRight() {
+        direction = direction.rotateRight();
+    }
+
     public int getX() {
         return x;
     }

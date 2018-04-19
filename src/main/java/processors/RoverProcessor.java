@@ -28,7 +28,7 @@ public class RoverProcessor {
         List<Instruction> instructions = roverInput.getInstructions();
 
         for (Instruction instruction : instructions) {
-            position = instruction.execute(position);
+            instruction.execute(position);
             if (!plateauSize.contains(position)) {
                 throw new RoverMovementException(position, instruction, plateauSize);
             }
