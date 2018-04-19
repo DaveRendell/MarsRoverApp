@@ -4,6 +4,7 @@ import instructions.Instruction;
 import models.PlateauSize;
 import models.RoverInput;
 import models.RoverPosition;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import parsers.InstructionListParser;
 import parsers.PlateauSizeParser;
 import parsers.RoverPositionParser;
@@ -19,14 +20,16 @@ public class MarsRoverApp {
     private PlateauSizeParser plateauSizeParser;
     private RoverPositionParser roverPositionParser;
     private InstructionListParser instructionListParser;
-    private PrintStream outputStream;
+    private PrintStream usageInstructionOutputStream;
+    private PrintStream resultOutputStream;
 
-    public MarsRoverApp(Scanner scanner, PlateauSizeParser plateauSizeParser, RoverPositionParser roverPositionParser, InstructionListParser instructionListParser, PrintStream outputStream) {
+    public MarsRoverApp(Scanner scanner, PlateauSizeParser plateauSizeParser, RoverPositionParser roverPositionParser, InstructionListParser instructionListParser, PrintStream usageInstructionOutputStream, PrintStream resultOutputStream) {
         this.scanner = scanner;
         this.plateauSizeParser = plateauSizeParser;
         this.roverPositionParser = roverPositionParser;
         this.instructionListParser = instructionListParser;
-        this.outputStream = outputStream;
+        this.usageInstructionOutputStream = usageInstructionOutputStream;
+        this.resultOutputStream = resultOutputStream;
     }
 
     public void run() {
@@ -37,15 +40,15 @@ public class MarsRoverApp {
 
         roverInputs.forEach(input -> {
             try {
-                outputStream.println(roverProcessor.process(input));
+                resultOutputStream.println(roverProcessor.process(input).toString());
             } catch (RoverMovementException e) {
-                outputStream.println(e.getMessage());
+                resultOutputStream.println(e.getMessage());
             }
         });
     }
 
     private PlateauSize readPlateauSize() {
-        System.out.println(
+        usageInstructionOutputStream.println(
                 "Please enter dimensions of the plateau, in format \"<width> <height>\", where width " +
                         "and height are positive integers");
 
@@ -55,7 +58,7 @@ public class MarsRoverApp {
             try {
                 plateauSize = plateauSizeParser.parse(plateauLine);
             } catch (UserInputException e){
-                System.out.println(e.getMessage());
+                usageInstructionOutputStream.println(e.getMessage());
             }
         }
 
@@ -65,7 +68,7 @@ public class MarsRoverApp {
     private List<RoverInput> readRoverInputs() {
         List<RoverInput> roverInputs = new ArrayList<>();
 
-        System.out.println(
+        usageInstructionOutputStream.println(
                 "Please enter initial position and cardinal direction of a rover, in format \"<x> <y> <N|E|S|W>\"");
         String roverPositionLine = scanner.nextLine();
         do {
@@ -74,12 +77,12 @@ public class MarsRoverApp {
                 try {
                     roverPosition = roverPositionParser.parse(roverPositionLine);
                 } catch (UserInputException e){
-                    System.out.println(e.getMessage());
+                    usageInstructionOutputStream.println(e.getMessage());
                     roverPositionLine = scanner.nextLine();
                 }
             }
 
-            System.out.println(
+            usageInstructionOutputStream.println(
                     "Please enter list of rover instructions, represented by one of 'L', 'R', and 'M'");
 
             List<Instruction> instructions = new ArrayList<>();
@@ -88,13 +91,13 @@ public class MarsRoverApp {
                 try {
                     instructions = instructionListParser.parse(instructionLine);
                 } catch (UserInputException e){
-                    System.out.println(e.getMessage());
+                    usageInstructionOutputStream.println(e.getMessage());
                 }
             }
 
             roverInputs.add(new RoverInput(roverPosition, instructions));
 
-            System.out.println(
+            usageInstructionOutputStream.println(
                     "Please enter initial position and cardinal direction of a rover, in format \"<x> <y> <N|E|S|W>\"" +
                             "\n (or leave empty to finish)");
             roverPositionLine = scanner.nextLine();
@@ -109,8 +112,10 @@ public class MarsRoverApp {
         RoverPositionParser roverPositionParser = new RoverPositionParser();
         InstructionListParser instructionListParser = new InstructionListParser();
 
+        // Two separate output streams are used. In production code we want both to output to stdout, but they are
+        // passed in separately to allow easily tracking the output for the results in test code.
         MarsRoverApp app = new MarsRoverApp(
-                scanner, plateauSizeParser, roverPositionParser, instructionListParser, System.out);
+                scanner, plateauSizeParser, roverPositionParser, instructionListParser, System.out, System.out);
 
         app.run();
     }
