@@ -49,8 +49,9 @@ public class MarsRoverApp {
 
     private PlateauSize readPlateauSize() {
         usageInstructionOutputStream.println(
-                "Please enter dimensions of the plateau, in format \"<width> <height>\", where width " +
-                        "and height are positive integers");
+                "Please enter coordinates of the north-east corner of the plateau " +
+                        "(where the south-west coordinate is 0 0) separated by a space:" +
+                        "\n\t<x> <y>");
 
         PlateauSize plateauSize = null;
         while (plateauSize == null) {

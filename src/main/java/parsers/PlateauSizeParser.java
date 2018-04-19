@@ -23,8 +23,8 @@ public class PlateauSizeParser extends LineParser<PlateauSize> {
     protected UserInputException createUserInputException(String input) {
         return new UserInputException(
                 input,
-                "Enter plateau size as two non negative integers separated by a space:" +
-                        "\n\t<width> <height>" +
+                "Enter coordinates of the north-east corner of the plateau (where the south-west coordinate is 0 0) separated by a space:" +
+                        "\n\t<x> <y>" +
                         "\n E.g.:" +
                         "\n\t25 30");
     }
